@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 public class Contacts {
     private final ArrayList<Contact> contacts;
-    private static final String FILEPATH = "contacts.txt";
+    private static final String FILEPATH = "src/main/java/ContactList/contacts.txt";
 
     public Contacts() {
         this.contacts = new ArrayList<>();
@@ -96,7 +96,7 @@ public class Contacts {
 
     public static void searchContact(Scanner scanner) {
         System.out.print("Enter name to search for: ");
-        String name = scanner.next();
+        String name = scanner.nextLine();
         ArrayList<Contact> contacts = readContacts();
         boolean found = false;
         for (Contact contact : contacts) {
