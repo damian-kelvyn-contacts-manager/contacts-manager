@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class ContactUtils {
-    protected final ArrayList<Contact> contacts;
+    protected ArrayList<Contact> contacts;
 
     public ContactUtils() {
         this.contacts = new ArrayList<>();
@@ -41,6 +41,8 @@ public class ContactUtils {
         try (BufferedReader br = new BufferedReader(new FileReader(FILEPATH))) {
             String line;
             while ((line = br.readLine()) != null) {
+                if(line.equals("\n"))
+                    break;
                 String[] parts = line.split(",");
                 String name = parts[0];
                 String phone = parts[1];
@@ -54,28 +56,71 @@ public class ContactUtils {
     }
 
     public static void addNew(Scanner scan) {
-        System.out.println("Enter contact name: ");
-        scan.nextLine();
-        String name = scan.nextLine();
-        System.out.println("Enter contact number: ");
-        String number = scan.nextLine();
-        Contact nContact = new Contact(name, number);
-        writeContact(nContact);
-        System.out.println("Contact added");
-    }
-
-    public static void writeContact(Contact contact) {
-        try (FileWriter fw = new FileWriter(FILEPATH, true)) {
-            fw.write(contact.getName() + "," + contact.getNumber() + "\n");
-        } catch (IOException e) {
-            System.out.println("Error");
+            System.out.println("Enter contact name: ");
+//            scan.nextLine();
+            String name = scan.nextLine();
+            ArrayList<Contact> contacts = readContacts();
+            for (Contact contact : contacts) {
+                if (contact.getName().equalsIgnoreCase(name)) {
+                    overwriteContact(contact.getName());
+                    return;
+                }
+            }
+            System.out.println("Enter contact number: ");
+            String number = scan.nextLine();
+            Contact nContact = new Contact(name, number);
+            contacts.add(nContact);
+            writeContacts(contacts);
+            System.out.println("Contact added");
         }
+
+    public static void overwriteContact(String name){
+//        Contact temp = rmContact;
+        System.out.printf("There's already a contact named %s. Do you want to overwrite it? (Yes/No)\n",name);
+        Scanner scan = new Scanner(System.in);
+        String response = scan.nextLine();
+        ArrayList<Contact> contacts = readContacts();
+        if(response.equalsIgnoreCase("Yes")){
+            for(Contact contact : contacts){
+                if(contact.getName().equalsIgnoreCase(name)){
+                    System.out.println("Enter new number: ");
+                    String number = scan.nextLine();
+                    contact.setNumber(number);
+                    writeContacts(contacts);
+                    System.out.println("Contact overwritten");
+                    return;
+                }
+            }
+        }
+        System.out.println("Contact not overwritten");
     }
 
-    public static void searchContact(Scanner scanner) {
+
+    public static String formattedNumber(Contact contact) {
+        String formatNumber = "";
+        boolean running = true;
+        while(running) {
+            if (contact.getNumber().length() == 10) {
+                formatNumber = contact.getNumber().substring(0, 3) + "-" + contact.getNumber().substring(3, 6) + "-" + contact.getNumber().substring(6);
+                running = false;
+            } else if (contact.getNumber().length() == 7) {
+                formatNumber = contact.getNumber().substring(0, 3) + "-" + contact.getNumber().substring(3);
+                running = false;
+            } else {
+                System.out.println("Invalid number");
+                System.out.println("Enter contact number: ");
+                Scanner scan = new Scanner(System.in);
+                String number = scan.nextLine();
+                contact.setNumber(number);
+            }
+        }
+        return formatNumber;
+    }
+
+    public static void searchContact(Scanner scan) {
         System.out.print("Enter name to search for: ");
-        scanner.nextLine();
-        String name = scanner.nextLine();
+//        scan.nextLine();
+        String name = scan.nextLine();
         ArrayList<Contact> contacts = readContacts();
         boolean found = false;
         for (Contact contact : contacts) {
@@ -91,8 +136,8 @@ public class ContactUtils {
     }
 
     public static void deleteContact(Scanner scan) {
-        System.out.print("Enter first name to delete: ");
-        scan.nextLine();
+        System.out.print("Enter full name to delete: ");
+//        scan.nextLine();
         String name = scan.nextLine();
         ArrayList<Contact> contacts = readContacts();
         for (Contact contact : contacts) {
@@ -100,7 +145,7 @@ public class ContactUtils {
                 contacts.remove(contact);
                 writeContacts(contacts);
                 System.out.println("Contact deleted");
-                break;
+                return;
             }
         }
     }
@@ -108,7 +153,7 @@ public class ContactUtils {
     public static void writeContacts(ArrayList<Contact> contacts) {
         try (FileWriter fw = new FileWriter(FILEPATH)) {
             for (Contact contact : contacts) {
-                fw.write(contact.getName() + "," + contact.getNumber() + "\n");
+                fw.write(contact.getName() + "," + (contact.getNumber().length() > 7 && contact.getNumber().length() >= 12 ? contact.getNumber() : formattedNumber(contact)) + "\n");
             }
         } catch (IOException e) {
             System.out.println("Error writing contacts file: " + e.getMessage());

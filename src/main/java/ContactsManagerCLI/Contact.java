@@ -2,7 +2,7 @@ package ContactsManagerCLI;
 
 public class Contact {
     private final String name;
-    private final String number;
+    private String number;
 
     public Contact(String name, String number) {
         this.name = name;
@@ -15,4 +15,7 @@ public class Contact {
         return number;
     }
 
+    public void setNumber(String number) {
+        this.number = number;
+    }
 }

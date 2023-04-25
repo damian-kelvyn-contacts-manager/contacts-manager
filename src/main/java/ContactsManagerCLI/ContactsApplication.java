@@ -9,6 +9,7 @@ public class ContactsApplication extends ContactUtils {
         while (running) {
             printMenu();
             int userInput = scan.nextInt();
+            scan.nextLine();
             switch (userInput) {
                 case 1 -> showContacts();
                 case 2 -> addNew(scan);
