@@ -2,6 +2,8 @@ package ContactsManagerCLI;
 
 import java.util.Scanner;
 
+import static ContactsManagerCLI.Contacts.*;
+
 
 public class ContactsApplication {
     public static void main(String[] args) {
@@ -16,16 +18,16 @@ public class ContactsApplication {
             int choice = scanner.nextInt();
             switch (choice) {
                 case 1:
-                    Contacts.showContacts();
+                    showContacts();
                     break;
                 case 2:
-                    Contacts.addContact(scanner);
+                    addContact(scanner);
                     break;
                 case 3:
-                    Contacts.searchContact(scanner);
+                    searchContact(scanner);
                     break;
                 case 4:
-                    Contacts.deleteContact(scanner);
+                    deleteContact(scanner);
                     break;
                 case 5:
                     System.exit(0);
