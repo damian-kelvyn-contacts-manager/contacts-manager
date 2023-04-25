@@ -5,27 +5,28 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Scanner;
 
 public class Contacts {
     private final ArrayList<Contact> contacts;
     private static final String FILEPATH = "contacts.txt";
-    public Contacts(){
+
+    public Contacts() {
         this.contacts = new ArrayList<>();
     }
 
 
-public static void showContacts() {
-    ArrayList<Contact> contacts = readContacts();
-    if (contacts.isEmpty()) {
-        System.out.println("No contacts found");
-    } else {
-        for (Contact contact : contacts) {
-            System.out.println(contact);
+    public static void showContacts() {
+        ArrayList<Contact> contacts = readContacts();
+        if (contacts.isEmpty()) {
+            System.out.println("No contacts found");
+        } else {
+            for (Contact contact : contacts) {
+                System.out.println(contact.getName() + " " + contact.getNumber());
+            }
         }
     }
-}
+
     public static ArrayList<Contact> readContacts() {
         ArrayList<Contact> contacts = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(FILEPATH))) {
@@ -42,11 +43,13 @@ public static void showContacts() {
         }
         return contacts;
     }
+
     public static void addContact(Scanner scanner) {
         System.out.print("Enter name: ");
-        String name = scanner.next();
+        scanner.nextLine();
+        String name = scanner.nextLine();
         System.out.print("Enter phone number: ");
-        String phone = scanner.next();
+        String phone = scanner.nextLine();
         Contact contact = new Contact(name, phone);
         writeContact(contact);
         System.out.println("Contact added");
@@ -60,9 +63,11 @@ public static void showContacts() {
             System.out.println("Error");
         }
     }
-    public static void deleteContact (Scanner scanner){
+
+    public static void deleteContact(Scanner scanner) {
         System.out.print("Enter name to delete: ");
-        String name = scanner.next();
+        scanner.nextLine();
+        String name = scanner.nextLine();
         ArrayList<Contact> contacts = readContacts();
         boolean found = false;
         for (Contact contact : contacts) {
@@ -78,6 +83,7 @@ public static void showContacts() {
             System.out.println("Contact not found");
         }
     }
+
     public static void writeContacts(ArrayList<Contact> contacts) {
         try (FileWriter fw = new FileWriter(FILEPATH)) {
             for (Contact contact : contacts) {
