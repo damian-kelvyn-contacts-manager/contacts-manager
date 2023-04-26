@@ -16,7 +16,7 @@ public class ContactsApplication extends ContactUtils {
                 case 3 -> searchContact(scan);
                 case 4 -> deleteContact(scan);
                 case 5 -> {
-                    System.out.println("Goodbye!");
+                    exitProgram();
                     running = false;
                 }
                 default -> System.out.println("Invalid input. Please try again.");
